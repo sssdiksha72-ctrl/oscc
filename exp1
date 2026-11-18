@@ -1,0 +1,59 @@
+Aim: System Calls Demonstration – Write and execute basic system calls (fork(), exec(), wait(), exit()) in Linux.
+
+Theory:
+1. What is a System Call?
+ A system call is a mechanism through which a user program requests services from the operating system. It allows programs to interact with the kernel to perform operations such as creating processes, executing programs, and terminating processes.
+
+2. Types of System Calls Used
+1. fork()
+•	The fork() system call creates a new process called the child process.
+•	The process that calls fork() is called the parent process.
+•	Both processes execute independently after the process is created.
+2. exec()
+•	The exec() family of system calls is used to execute a new program.
+•	It replaces the current process's program with a new program.
+•	Example: execl() can execute the Linux ls command.
+3. wait()
+•	The wait() system call makes the parent process wait until a child process terminates.
+•	It helps synchronize the execution of parent and child processes.
+4. exit()
+•	The exit() function terminates the calling process.
+•	It returns an exit status to the operating system.
+
+Code:
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+
+int main()
+{
+    int pid = fork();
+
+    if (pid == 0)
+    {
+        printf("Child Process\n");
+
+        execl("/bin/ls", "ls", NULL);
+
+        exit(0);
+    }
+    else
+    {
+        wait(NULL);
+        printf("Parent Process\n");
+        exit(0);
+    }
+
+    return 0;
+}
+
+Output:
+Child Process
+file1.c
+file2.c
+Parent Process
+
+
+
+
