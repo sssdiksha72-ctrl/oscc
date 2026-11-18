@@ -1,0 +1,47 @@
+Aim: Multithreading with Synchronization – Demonstrate multithreading in Python using threading and Lock for synchronization
+
+Theory:
+Multithreading is a process of running multiple threads within a single program at the same time to perform different tasks efficiently.
+What is a Thread?
+A thread is the smallest unit of execution within a process. A single program can contain multiple threads.
+Synchronization is a process of controlling multiple threads so that they can safely access shared data or resources without causing errors.
+
+Code:-
+import threading
+counter = 0
+lock = threading.Lock()
+def increment():
+    global counter
+
+    for i in range(5):
+        lock.acquire()
+        counter = counter + 1
+        print("Counter =", counter)
+        lock.release()
+
+t1 = threading.Thread(target=increment)
+t2 = threading.Thread(target=increment)
+
+t1.start()
+t2.start()
+
+t1.join()
+t2.join()
+
+print("Final Counter =", counter)
+
+
+Output:-
+Counter = 1
+Counter = 2
+Counter = 3
+Counter = 4
+Counter = 5
+Counter = 6
+Counter = 7
+Counter = 8
+Counter = 9
+Counter = 10
+Final Counter = 10
+
+
