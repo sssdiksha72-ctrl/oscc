@@ -1,0 +1,87 @@
+Aim: Critical Section Problem (Producer-Consumer) using Semaphores – Implement the Producer-Consumer problem using semaphores in C.
+
+Theory: Producer-Consumer Problem
+•	The Producer produces items and puts them into a shared buffer.
+•	The Consumer takes items from the buffer.
+
+What is a Semaphore?
+A semaphore is a variable used in Operating Systems to control access to shared resources.
+
+We use 3 semaphores:	
+Empty:- Number of empty spaces
+Full:- Number of available items
+            Mutex:- Allows only one thread to access the buffer
+
+Code:
+#include <stdio.h>
+#include <pthread.h>
+#include <semaphore.h>
+
+int buffer[3];
+int in = 0, out = 0;
+
+sem_t empty;
+sem_t full;
+sem_t mutex;
+
+// Producer
+void *producer(void *arg)
+{
+    for (int i = 1; i <= 3; i++)
+    {
+        sem_wait(&empty);
+        sem_wait(&mutex); //lock the buffer
+
+        buffer[in] = i;
+        printf("Produced: %d\n", i);
+        in++;
+
+        sem_post(&mutex); //unlock the buffer
+        sem_post(&full); }
+
+    return NULL;
+}
+// Consumer
+void *consumer(void *arg)
+{
+    for (int i = 1; i <= 3; i++)
+    {
+        sem_wait(&full);
+        sem_wait(&mutex);
+
+        printf("Consumed: %d\n", buffer[out]);
+        out++;
+
+        sem_post(&mutex);
+        sem_post(&empty);
+    }
+return NULL;
+}
+
+int main()
+{
+    pthread_t p, c;
+
+    // Initialize semaphores
+    sem_init(&empty, 0, 3);
+    sem_init(&full, 0, 0);
+    sem_init(&mutex, 0, 1);
+
+    // Create threads
+    pthread_create(&p, NULL, producer, NULL);
+    pthread_create(&c, NULL, consumer, NULL);
+
+    // Wait for threads
+    pthread_join(p, NULL);
+    pthread_join(c, NULL);
+
+    return 0;
+}
+
+Output: 
+Produced: 1
+Produced: 2
+Produced: 3
+Consumed: 1
+Consumed: 2
+Consumed: 3
