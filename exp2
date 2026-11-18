@@ -1,0 +1,72 @@
+Practical No. 2 
+ 
+Aim: Process Creation & Termination – Implement a C program to create child processes using fork() and manage termination with wait(). 
+ 
+Theory: 
+1. Process:- 
+A process is a program that is currently running. 
+
+2.	What is Process Creation? 
+Process creation means creating a new process from an existing process. 
+In Linux/Unix, this is done using the fork() system call. 
+•	The original process is called the Parent Process.  
+•	The new process is called the Child Process
+ 
+3.	What is fork()? 
+fork() is a system call that creates a new child process by copying the parent process. 
+Return values: 
+•	0 → Child process  
+•	Positive value → Parent process (child PID)  
+•	-1 → Error   
+4.	Parent Process 
+•	Creates the child process.  
+•	Can wait for the child using wait().  
+5.	Child Process 
+•	Executes independently after fork().  
+•	Has its own Process ID (PID).   
+6.	wait() 
+•	Makes the parent process wait until the child finishes.  
+•	Header file:  #include <sys/wait.h> 
+Syntax: wait(NULL); 
+ 
+7.	Why use wait()? 
+•	Synchronizes parent and child.  
+•	Prevents zombie processes.  
+ 
+8.	Process Termination 
+A process ends after completing its execution or by using return 0; or exit(). 
+ 
+Here's a simple C program for Process Creation & Termination using fork() and wait(). 
+
+Code:
+#include <stdio.h> 
+#include <unistd.h> 
+#include <sys/wait.h> 
+ 
+int main() 
+{    // Declares a variable pid      pid_t pid; 
+ 
+    // Calls the fork() system call and Create a child process      pid = fork(); 
+     if (pid < 0) 
+    { 
+        printf("Process creation failed!\n"); 
+    } 
+    else if (pid == 0) 
+    { 
+        // Child process 
+        printf("Child Process\n"); 
+        printf("Child PID = %d\n", getpid()); 
+    }     else 
+    { 
+        // Parent process waits for child         wait(NULL);         printf("Parent Process\n");         printf("Parent PID = %d\n", getpid()); 
+    } 
+ 
+    return 0; 
+} 
+ 
+Output:
+Child Process 
+Child PID = 2456 
+Parent Process 
+Parent PID = 2455 
+ 
