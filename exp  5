@@ -1,0 +1,46 @@
+Aim: Inter-Process Communication (IPC) using Shared Memory – Create a program that exchanges data between processes using shared memory (shmget(), shmat()).
+
+Theory:
+•	IPC using Shared Memory in C
+Inter-Process Communication (IPC) allows two or more processes to exchange data.
+Shared memory is one of the fastest IPC methods because multiple processes access the same memory area
+i)	shmat() - attaches shared memory to the process. 
+ii)	shmdt() - detaches shared memory.
+iii)	shmget() - creates a shared memory segment.
+iv)	shmid → stores the ID of the created shared memory
+
+Code:
+#include <stdio.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+
+int main()
+{
+    int shmid;
+    char *str;
+
+    // Create shared memory
+    shmid = shmget(1234, 100, 0666 | IPC_CREAT);
+
+    // Attach shared memory
+    str = (char *)shmat(shmid, NULL, 0);
+
+    // Write data
+    printf("Enter message: ");
+    scanf("%s", str);  //For long message (“% [^\n]”, str);
+
+    // Read data
+    printf("Message from shared memory: %s\n", str);
+
+    // Detach shared memory
+    shmdt(str);
+
+    return 0;
+}
+
+
+Output:
+Enter message: Hello
+Message from shared memory: Hello
+
+
