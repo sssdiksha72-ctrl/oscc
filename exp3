@@ -1,0 +1,71 @@
+Practical No. 3
+Aim:- Thread Creation & Synchronization – Develop a multithreaded program using the pthread library.
+
+Theory:-
+•	Thread:
+A thread is the smallest unit of execution inside a process. Multiple threads of the same process share the same memory and resources.
+•	Multithreading:
+Multithreading means running two or more threads at the same time to perform tasks concurrently.
+•	pthread Library:
+The POSIX Threads (pthread) library is used in C on Linux/Ubuntu to create and manage threads.
+•	Why Synchronization is Needed?
+When multiple threads access the same variable simultaneously, incorrect results may occur. This problem is called a race condition.
+Synchronization ensures that only one thread accesses the shared resource at a time.
+A mutex (Mutual Exclusion) is commonly used for synchronization.
+
+Code:-
+#include <stdio.h>
+#include <pthread.h> //creating and managing threads.
+
+int counter = 0; //shared variable.
+
+pthread_mutex_t lock; //Creates a mutex lock.
+
+void *increment(void *arg) //void *function_name(void *arg)
+
+{
+    int i;
+
+    for(i = 0; i < 5; i++)
+    {
+        pthread_mutex_lock(&lock);
+
+        counter++;
+        printf("Thread %ld: Counter = %d\n",
+               (long)arg, counter);
+
+        pthread_mutex_unlock(&lock);
+    }
+
+    return NULL; //thread function has finished.
+}
+int main()
+{
+    pthread_t thread1, thread2;
+
+    pthread_mutex_init(&lock, NULL); //initializes the mutex
+
+    pthread_create(&thread1, NULL, increment, (void *)1);
+    pthread_create(&thread2, NULL, increment, (void *)2);
+
+    pthread_join(thread1, NULL); // wait until Thread 1 finishes.
+    pthread_join(thread2, NULL); // waits for Thread 2 to finish.
+
+    pthread_mutex_destroy(&lock);
+
+    printf("Final Counter = %d\n", counter);
+
+    return 0;
+}
+Output:-
+Thread 1: Counter = 1
+Thread 1: Counter = 2
+Thread 2: Counter = 3
+Thread 2: Counter = 4
+Thread 1: Counter = 5
+Thread 2: Counter = 6
+Thread 1: Counter = 7
+Thread 2: Counter = 8
+Thread 1: Counter = 9
+Thread 2: Counter = 10
+Final Counter = 10
