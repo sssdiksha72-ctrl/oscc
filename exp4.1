@@ -1,0 +1,82 @@
+Practical No. 4 
+Aim:- CPU Scheduling Algorithms – Simulate FCFS, SJF, Round Robin, and Priority scheduling in C/Python.
+
+Theory:-
+What is CPU Scheduling?
+CPU scheduling is the process of selecting a process from the ready queue and giving it the CPU for execution.
+When several processes are ready to execute, the operating system uses a CPU scheduling algorithm to decide which process should run first.
+
+•	Process:- A process is a program that is currently running.  Example: P1, P2, P3
+•	Burst Time (BT):- The amount of CPU time required by a process.  example: P1 = 5 ms
+•	Waiting Time (WT):- The amount of time a process waits in the ready queue before getting the CPU.  Example: WT = Completion Time - Burst Time 
+•	Turnaround Time (TAT): Total time from when a process arrives until it finishes.  Example: TAT = Waiting Time + Burst Time
+•	Time Quantum: A fixed amount of CPU time given to each process in Round Robin scheduling.  Example: Time Quantum = 2 ms
+
+
+
+
+
+
+1.  FCFS Scheduling:- FCFS stands for First Come First Serve.
+The process that arrives first gets the CPU first.
+It works like a queue: First person in → First person served
+
+Code:-
+
+#include <stdio.h>
+
+int main()
+{
+    int n, i;
+    int bt[20], wt[20], tat[20]; //Three arrays are created.
+
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+
+    printf("Enter burst time for each process:\n");
+ for(i = 0; i < n; i++)
+    {
+        printf("P%d: ", i + 1);
+        scanf("%d", &bt[i]);
+    }
+
+    // Waiting time of first process is 0
+    wt[0] = 0;
+
+    // Calculate waiting time
+    for(i = 1; i < n; i++)
+    {
+        wt[i] = wt[i - 1] + bt[i - 1];
+    }
+
+    // Calculate turnaround time
+    for(i = 0; i < n; i++)
+    {
+        tat[i] = wt[i] + bt[i];
+    }
+
+    printf("\nProcess\tBT\tWT\tTAT\n");
+
+    for(i = 0; i < n; i++)
+    {
+        printf("P%d\t%d\t%d\t%d\n",
+               i + 1, bt[i], wt[i], tat[i]);
+    }
+
+    return 0;
+}
+
+Output:-
+ 
+
+Enter number of processes: 3
+
+Enter burst time for each process:
+P1: 5
+P2: 3
+P3: 2
+
+Process    BT    WT    TAT
+P1         5     0     5
+P2         3     5     8
+P3         2     8     10
